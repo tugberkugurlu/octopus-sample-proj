@@ -1,0 +1,23 @@
+version: 1.0.{build}
+build_script:
+- ps: >-
+    cd scripts
+
+    .\build.ps1
+
+    cd "..\artifacts\_PublishedWebsites\octopus-sample-proj\"
+
+    & "..\..\..\tools\OctopusTools\Octo.exe" pack --id=OctoSample --outFolder "$((resolve-path "..\..\..\artifacts").Path)"
+artifacts:
+- path: artifacts\_PublishedWebsites\octopus-sample-proj
+  name: octopus-sample-proj
+- path: artifacts\OctoSample.*.nupkg
+  name: OctoSample
+- path: artifacts
+  name: artifacts
+  
+deploy:
+  - provider: Environment
+    name: sample-app
+    on:
+      branch: master
